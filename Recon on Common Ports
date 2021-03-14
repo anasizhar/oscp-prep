@@ -1,0 +1,62 @@
+FTP Enumeration - Port 21: 
+  - Anonymous Login
+  - Weak Credentials (admin/admin)
+  - System File Read/Write
+  - CVE
+  
+SSH Enumeration - Port 22:
+  - Weak Credentials
+  - Credentials Reuse found in earlier part of assessment
+  - OpenSSH 4.x has a CVE where public RSA/DSA keys can be bruteforced if private keys are known, more details on: https://github.com/g0tmi1k/debian-ssh
+  - CVE
+  
+*SMTP Enumeration - Port 25,465,587:
+  - Open Relay attack
+  - CVE
+ 
+*DNS Enumeration - Port 53:
+  - Zone Transfer (`dig axfr @<DNS_IP>` #zone transfer without domain, `dig axfr @<DNS_IP> <DOMAIN>` #zone transfer guessing the domain)
+  
+  
+HTTP/HTTPs Enumeration - Port 80,443:
+  - Should be done after checking all other open ports as it's enumeration is exhaustive and we must be sure that we don't have any other entry point other than this.
+  - Nikto Scan(`nikto -h <ip>:<port>`)
+  - Dir Busting (Mostly common.txt will work, unless we have a specific plan, going blind in dir busting may consume alot of time which may not be suitable in time constrained environment such as exam etc.)
+  - View Page source to get sensitive information i.e. CMS version, Plugin Version, HTML comments, directories etc. This information can be further used to search version specific exploits (yeah i have faced such scenerio where only plugin was vulnerable and gave me LFI)
+  - If login portal try below:
+    1- SQL injection to bypass auth.
+    2- Weak credentials (admin/admin, default creds, generate wordlist with cewl)
+  - Look for parameters that can be used for LFI (file, path, location etc.)
+  - CVE against web technologies.
+  - Crawl complete web completely to get familiar with it's functionalities.
+  - Always remember if port 80 and 443 are open, enumerate both. We cannot assume that it is just HTTPs of 443, there can be entire different application.
+  - Make less assumptions and rely on data more, pro tip. ;)
+  
+SMB Enumeration - Port 139,445:
+  - SMB share to read sensitive files.
+  - CVE against samba version.
+  - Symlink attack to mount root share on smb share.
+  - Use wireshark to sniff exact Samba version.
+
+MSSQL - Port 1433:
+  - use nmap to get exact MSSQL version
+  - if we have creds from previous reconaissance we can user crackmapexec to login
+  - The user running MSSQL server will have enabled the privilege token SeImpersonatePrivilege. You probably will be able to escalate to Administrator using this token: Juicy-potato
+  - Great resource: https://book.hacktricks.xyz/pentesting/pentesting-mssql-microsoft-sql-server
+  
+MYSQL - Port 3306:
+  - Credential reuse to login into mysql and read database users or create a login as well. Also, shell commands can be run as a result.
+  - select do_system('id'); //to run system commands from mysql shell.
+  - Great resource: https://book.hacktricks.xyz/pentesting/pentesting-mysql 
+ 
+*RDP - Port 3386:
+  - Credential re use to login.
+  - Not much of our interest.
+  
+TFTP - Port UDP 69:
+  - requires no pre authentication.
+  - old protocol to read protocols. need to convert path to notation 8 in order to work or use `atftp` to get it working.
+
+
+
+
