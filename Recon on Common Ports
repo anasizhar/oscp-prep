@@ -57,6 +57,7 @@ TFTP - Port UDP 69:
   - requires no pre authentication.
   - old protocol to read protocols. need to convert path to notation 8 in order to work or use `atftp` to get it working.
 
+* these ports didn't serve a great deal in gaining initial shell as per OSCP prep, and hence should be less on priority.
 
 
 
