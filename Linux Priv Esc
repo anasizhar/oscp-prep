@@ -65,6 +65,7 @@ void inject(){
       - history files: cat *history | less
       - config files
       - ssh keys 
+      - Use linEnum to search for specific keywords
       
      
 4- If nothing comes up, from above techniques then try looking for services running on ports which were not publically accessible. And check if we can forward them to our host.
