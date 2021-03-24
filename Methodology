@@ -53,7 +53,10 @@ My methodology for solving a box:
     
 8- For windows, if powershell is not working try running it thru cmd. First, generate a simple http request from cmd and then improvise your exploit to serve your need.
 
-9- When gained a lower shell, invoke priv esc methodology as per the victim OS.
+9- Always first confirm exploit with some sort of sanity check like a simple http request and then move towards gaining reverse/bind shell. Try various methods and languages to get shell
+   on the victim machine.
+
+10- When gained a lower shell, invoke priv esc methodology as per the victim OS.
     
 
   
