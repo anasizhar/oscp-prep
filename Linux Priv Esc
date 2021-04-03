@@ -38,6 +38,7 @@
      - abuse command line options if command is set with wild card ( highly unlikely)
   f- SUID/SGID binaries:
      - Search for vulnerabilities in binaries via searchsploit, google, github.
+     - Always do manual enumeration via gtfobin or google of all uncommon suid bins.
      - Look for any shared object used by binaries:
 	     strace /path/to/binary 2>&1 | grep -iE "open|access|no such files"
 
