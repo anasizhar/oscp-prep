@@ -68,16 +68,17 @@ void inject(){
       - ssh keys 
       - Use linEnum to search for specific keywords
       
-     
-4- If nothing comes up, from above techniques then try looking for services running on ports which were not publically accessible. And check if we can forward them to our host.
+4- Run les.sh, i know you haven't.     
+
+5- If nothing comes up, from above techniques then try looking for services running on ports which were not publically accessible. And check if we can forward them to our host.
    
-5- Enumerate binaries more to enusre to make sure you have done complete job to enumerate all binaries.
+6- Enumerate binaries more to enusre to make sure you have done complete job to enumerate all binaries.
    
-6- At this point, we can try using kernel exploits as well.
+7- At this point, we can try using kernel exploits as well.
       - Make sure the kernel exploit you use is valid for your target linux distribution
       - use linux exploit suggestor for that, and use one with highest ratings only
-      
-7- If still nothing makes sense, try having a break and revisiting the notes.
+
+8- If still nothing makes sense, try having a break and revisiting the notes.
    
    
    
