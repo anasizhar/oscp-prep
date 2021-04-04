@@ -18,6 +18,11 @@ My methodology for solving a box:
 6- Always remember it will not be too complex, it will always be from something you've learned. Don't overly complex things for yourself. If you have spent 20 mins into service and found nothing, you probably should look for something else.
 7- Some stuff regarding web applications:
   a- Since sqlmap is not allowed, don't fall for a trap to exfilterate data via SQL injection manually. I think it will be the intended way and you should try it at last when all your other resources are exhausted. Use SQL injection to bypass authentication on both username and password fields.
+  
+  **Correction** 
+  Sqlinjection can also be used to get a shell if we know a publically accessible path, like in this case we knew that C:\xampp\htdocs can be accessed publically, so we can create our shell there:
+  ' UNION SELECT ("<?php echo passthru($_GET['cmd']);") INTO OUTFILE 'C:/xampp/htdocs/cmd.php'  -- -'
+  **Correction**
   b- if their is LFI and not RFI, then do below:
     - use PHP wrappers to get command execution. (useful link: https://book.hacktricks.xyz/pentesting-web/file-inclusion)
     - try to read creds from default locations. Each application that use creds to authenticate saves creds locally in order to perform successful authentication. We can use LFI to read password hashes/creds from such places like below:
