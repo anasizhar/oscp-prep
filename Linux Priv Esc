@@ -1,3 +1,5 @@
+* Read all the files in www and users home directory with `ls -la` so that no dot files gets missed. Also read .bash_history file as well*
+
 1- Run multiple priv esc scripts like Linpeas, Lse.sh, LinEnum, unix-privesc-check.
 
 2- Pay attention to output results and keep notes of most highlighted things. Also, run lse.sh with increasing levels as well.
