@@ -9,6 +9,9 @@ SSH Enumeration - Port 22:
   - Credentials Reuse found in earlier part of assessment
   - OpenSSH 4.x has a CVE where public RSA/DSA keys can be bruteforced if private keys are known, more details on: https://github.com/g0tmi1k/debian-ssh
   - CVE
+  - /.ssh/authorized_keys
+  - /.ssh/id_rsa
+  - /.ssh/id_rsa.pub
   
 *SMTP Enumeration - Port 25,465,587:
   - Open Relay attack
