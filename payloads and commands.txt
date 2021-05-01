@@ -2,7 +2,7 @@
 Interactive TTY Shell
 ======================
 # python
-python -c 'import pty; pty.spawn("/bin/sh")'
+python -c 'import pty; pty.spawn("/bin/bash")'
 #for python3
 python3 -c 'import pty; pty.spawn("/bin/bash")' 
 
