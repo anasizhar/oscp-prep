@@ -29,7 +29,10 @@ HTTP/HTTPs Enumeration - Port 80,443:
   - If login portal try below:
     1- SQL injection to bypass auth.
     2- Weak credentials (admin/admin, default creds, generate wordlist with cewl)
-  - Look for parameters that can be used for LFI (file, path, location etc.)
+  - Look for parameters and CVEs that can be used for LFI (file, path, location etc.)
+    - if found, try to get password files of other services like smb, firefox etc.
+    - Try locating functionality to upload a shell, and access it through LFI.
+    - try getting all users from /etc/passwd and brtueforce ssh.
   - CVE against web technologies.
   - Crawl complete web completely to get familiar with it's functionalities.
   - Always remember if port 80 and 443 are open, enumerate both. We cannot assume that it is just HTTPs of 443, there can be entire different application.
