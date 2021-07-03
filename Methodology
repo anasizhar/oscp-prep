@@ -33,6 +33,7 @@ My methodology for solving a box:
         C:\Program Files\Microsoft SQL Server\<SQL-VERSION>\MSSQL\DATA\<MDF|LDF>
       -- Samba: Configuration of samba can be read at /etc/samba/smb.conf and default location for password file is below: 
         /var/lib/samba/passdb.tdb
+        /var/lib/samba/private/passdb.tdb
       -- Shadow: Very unlikely but still worth a try:
         /etc/shadow
       -- SSH keys:
