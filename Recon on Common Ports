@@ -76,7 +76,7 @@ POSTGRES - Port 5432:
     - select * from pg_ls_dir('/tmp');
     - select * from pg_read_file('/etc/passwd' , 0 , 1000000);   
   - Similar machine nibles in pg paractice.
-  
+  - Reference: https://book.hacktricks.xyz/pentesting-web/sql-injection/postgresql-injection
   
   
 * these ports didn't serve a great deal in gaining initial shell as per OSCP prep, and hence should be less on priority.
