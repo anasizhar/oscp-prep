@@ -2,6 +2,7 @@ FTP Enumeration - Port 21:
   - Anonymous Login
   - Weak Credentials (admin/admin)
   - System File Read/Write
+  - PUT method allowed?
   - CVE
   
 SSH Enumeration - Port 22:
