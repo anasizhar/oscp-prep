@@ -221,7 +221,7 @@ echo -n ....... | wc -c
 ------------------------------------------
 John
 john hashes.txt --rules --wordlist=/usr/share/wordlists/rockyou.txt 
-
+john --show hashes.txt
 
 
 ##############################################################################
