@@ -67,5 +67,6 @@ My methodology for solving a box:
 
 11- For Node Js application check for eval function by inserting 1+1. (Reference: dibble PG paractice)
 
+12 - Check for weak cookies, to login as admin/privileged user.
   
   
