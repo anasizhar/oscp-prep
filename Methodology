@@ -64,7 +64,8 @@ My methodology for solving a box:
    on the victim machine.
 
 10- When gained a lower shell, invoke priv esc methodology as per the victim OS.
-    
+
+11- For Node Js application check for eval function by inserting 1+1. (Reference: dibble PG paractice)
 
   
   
