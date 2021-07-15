@@ -45,6 +45,7 @@ SMB Enumeration - Port 139,445:
   - Symlink attack to mount root share on smb share.
   - Use wireshark to sniff exact Samba version.
   - smbclient -L //192.168.54.122/ -N for anonymous login.
+  - smbclient \\\\192.168.201.125\\Commander -p 12445 - for login into smbshare
 
 MSSQL - Port 1433:
   - use nmap to get exact MSSQL version
