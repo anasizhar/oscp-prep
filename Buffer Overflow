@@ -1,5 +1,5 @@
 1- Identify the seeding point.
-2- Use Microsoft TCP view to on which process program is listening.
+2- Use Microsoft TCP view to on which port process program is listening.
 3- Always open imuunity debugger with admin rights to get list of all programs installed.
 4- Then find a seeding point of the application.
 5- Then create a basic fuzzer which increases the input chars on every iteration and add 10s time delay between every iteration. If the application crashes via
