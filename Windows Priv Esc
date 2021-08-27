@@ -110,7 +110,9 @@ Token Impersonation:
   4- If our current user is a service account, then Token Impersonation technique has higher chances to work.
   5- You've got it.
   
-  Useful Link: https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
+  Useful Links: 
+  https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
+  https://c0nd4.medium.com/oscp-privilege-escalation-guide-4b3623f57d71 (Mind Maps)
   
   
   
