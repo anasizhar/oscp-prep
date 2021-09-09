@@ -1,6 +1,6 @@
 My methodology for solving a box:
 
-1- Run full port scan: nmap -Pn <target>
+1- Run full port scan: nmap -Pn -p- <target>
 2- Then run with --script vuln  and bunch of other flag on all open ports: nmap -Pn --script vuln -sCV -A -p <OpenPorts> <target_host>
 3- Start looking deep into nmap results and enumerate service by service. I have a tendency to enumerate HTTP/HTTPs at last, because it requires more than any other normal port. Below is the strategy I follow:
   a- Enumerate all ports and look for common attack vectors on each of open ports.
