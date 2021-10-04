@@ -4,7 +4,7 @@
 - [ ] Port Scanning
   - Run a vuln scan on all ports using: `nmap -p- -Pn -sCV <host>`
   - Check for the services enumerated by nmap on each port and take notes seperately for each service: `Port 80 - Tomcat 8.x`
-  - If version is not enumerated by nmap google the service name and check if it has any publicly available exploits. Like in below example nmap enumerated only `gopher` but not the version, so it's wise to google "Gopher Exploits" and check if there are any prioritise the code execution ones. If any, add it in the notes of respective port 
+  - If version is not enumerated by nmap google the service name and check if it has any publicly available exploits. Like in below example nmap enumerated only `gopher` but not the version, so it's wise to google "Gopher Exploits" and check if there are any prioritise the code execution ones. If any, add it in the notes of respective port. 
 
     `70/tcp  open gopher`
     
@@ -18,7 +18,7 @@
      
      `nikto -h <target>:<port>`
      
-     - [ ] Run dir search and look for any exposed files. Look into the files and check the content. Your common loot can be Usernames, Passwords(rare), Version of hosted services(most likely), or any other configuration files. If there is Directory listing is open for one of the directories and the service is opensource try looking out the content on github, to see what can be sensitive files, to avoid going through each file manually: 
+     - [ ] Run dir search and look for any exposed files. Look into the files and check the content. Your common loot can be Usernames, Passwords(rare), Version of hosted services(most likely), or any other configuration files. If Directory listing is enabled for one of the directories and the service is opensource try looking out the content on github, to see what can be sensitive (to avoid going through each file manually): 
      
      `python3 /path/to/dirsearch/dirsearch.py -u http://target.com -e all -t 400` 
      
@@ -77,7 +77,7 @@
   - [ ] Weak Credentials/Credentials Reuse.
 
 
-- **Port 1443 - MSSQL**
+- **Port 3306 - MYSQL**
   - [ ] Credential reuse to login into mysql and read database users or create a login as well. Also, shell commands can be run as a result.
   - [ ] `select do_system('id');` to run system commands from mysql shell.
   - [ ] Incase of sql injection: `' UNION SELECT ("<?php echo passthru($_GET['cmd']);") INTO OUTFILE 'C:/xampp/htdocs/cmd.php'  -- -'`
@@ -88,7 +88,7 @@
 
 - **Port 69 - TFTP**
   -  requires no pre authentication.
-  -  old protocol to read protocols. need to convert path to notation 8 in order to work or use `atftp` to get it working.   
+  -  old protocol to read files. Need to convert path to notation 8 in order to work or use `atftp` to get it working.   
 
 - **Port 5432 - POSTGRES**
   - [ ] Default creds are postgres:postgres
