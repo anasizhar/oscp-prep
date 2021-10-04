@@ -1,1 +1,0 @@
-### Box Solving Methodology 
